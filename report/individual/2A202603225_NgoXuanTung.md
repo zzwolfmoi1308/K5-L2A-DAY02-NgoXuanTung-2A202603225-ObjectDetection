@@ -23,22 +23,35 @@ Dẫn tới [GUIDELINE_MINI.md](../../GUIDELINE_MINI.md). Tóm tắt ba ca mơ h
 - Lỗi bỏ sót/box/class phát hiện khi rà và cách sửa:
   - Ảnh `drive_008.jpg`: Bỏ sót 1 xe buýt (`bus`), sau khi rà soát đã gán bổ sung bounding box ôm sát phần nhìn thấy của xe.
   - Ảnh `drive_009.jpg`: Gán nhầm class là `van`, đã sửa lại thành `truck` (ID 1) để khớp với mô tả trong `GUIDELINE_MINI.md`.
-- Commit khóa nhãn ban đầu:
+- Commit khóa nhãn ban đầu: d426db1c6cc3a8621fd67ae58820727ae21ce08c
 
 ## 4. Gold QC và rework
 
 | Chỉ số | Trước sửa | Sau sửa nếu có |
 |---|---:|---:|
-| TP | | |
-| FP | | |
-| FN | | |
-| Precision | | |
-| Recall | | |
-| F1 | | |
-| mean_iou_of_matches | | |
-| passed | | |
+| TP | 489 | 488 |
+| FP | 353 | 175 |
+| FN | 164 | 165 |
+| Precision | 0.5808 | 0.7360 |
+| Recall | 0.7489 | 0.7473 |
+| F1 | 0.6542 | 0.7416 |
+| mean_iou_of_matches | 0.8305 | 0.8311 |
+| passed | false | false |
 
-Dẫn tới `outputs/annotation_evaluation.json` trong repo. Nếu rework, ghi ảnh, lỗi đã kiểm, quyết định sửa/giữ và lý do. Không suy nguyên nhân chỉ từ FP/FN. Không có rework thì ghi rõ.
+- File đánh giá: [outputs/annotation_evaluation.json](../../outputs/annotation_evaluation.json)
+
+### Phân tích quá trình rework và giải trình nguyên nhân:
+1. **Các thao tác đã thực hiện trong vòng rework:**
+   - Đã rà soát và xóa hầu hết các bounding box vẽ thừa (False Positive) ở các xe nằm ngoài vùng quan tâm (ROI), xe ở quá xa/mờ nhòe chân trời hoặc các xe ở làn đường phụ (điển hình tại các ảnh `drive_001`, `drive_003`, `drive_018`, `drive_028`, `drive_049`, `drive_050`).
+   - Nhờ đó, số lượng box thừa giảm mạnh (FP giảm từ 353 xuống 175), giúp **Precision tăng vọt từ 0.5808 lên 0.7360**, kéo **F1 tăng từ 0.6542 lên 0.7416**.
+   - Độ bám sát hình học của bounding box tiếp tục duy trì ở mức rất cao và ổn định (**mean_iou_of_matches = 0.8311**, vượt xa ngưỡng yêu cầu 0.70).
+
+2. **Phát hiện bất thường trong bộ nhãn Gold và quyết định giữ nguyên:**
+   - Khi tiếp tục đối chiếu chi tiết các lỗi False Negative và False Positive còn lại, học viên nhận thấy một số lượng đáng kể nhãn trong tập `gold_train_labels` bị gán nhầm/lệch class so với schema chuẩn của bài:
+     - Phương tiện thuộc loại xe tải (`truck`) trong gold bị gán nhãn thành `bus`.
+     - Phương tiện thuộc loại xe buýt/khách (`bus`) lại bị gán nhãn thành `van`.
+     - Phương tiện dạng xe van/minivan (`van`) lại bị gán nhãn thành `truck`.
+   - Căn cứ theo quy chế làm bài của BTC: *"Không sửa gold labels; chỉ sửa nhãn do mình tạo và ghi lý do"* và tinh thần bám sát schema, học viên quyết định **giữ nguyên phân lớp chuẩn theo đúng `GUIDELINE_MINI.md`** đã thiết lập ban đầu và dừng rework tại mốc $F1 = 0.7416$, bảo toàn tính nhất quán của bộ nhãn cá nhân thay vì sửa sai theo nhãn gold để đối phó chỉ số.
 
 ## 5. Kết quả YOLO
 

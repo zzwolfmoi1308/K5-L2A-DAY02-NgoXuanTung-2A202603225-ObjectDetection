@@ -4,12 +4,12 @@
 
 ## 1. Thông tin học viên
 
-- Họ tên:
-- MSSV:
-- Email:
-- Lớp:
-- Link repo bài làm:
-- Link Colab đã chạy:
+- Họ tên: Ngô Xuân Tùng
+- MSSV: 2A202603225
+- Email: 26ai.tungnx2@vinuni.edu.vn
+- Lớp: L2A
+- Link repo bài làm: https://github.com/zzwolfmoi1308/K5-L2A-DAY02-NgoXuanTung-2A202603225-ObjectDetection
+- Link Colab đã chạy: 
 
 ## 2. Schema và mini guideline
 
@@ -17,10 +17,12 @@ Dẫn tới [GUIDELINE_MINI.md](../../GUIDELINE_MINI.md). Tóm tắt ba ca mơ h
 
 ## 3. Annotation và self-QC
 
-- Số file nhãn train:
-- Kết quả checker và lỗi đã xử lý:
-- Danh sách ít nhất 10 ảnh đã rà bằng mắt:
+- Số file nhãn train: 50
+- Kết quả checker và lỗi đã xử lý: ĐẠT cấu trúc 50/50 file nhãn hợp lệ khi chạy `tools/check_yolo_labels.py` (đủ 50 file, đúng 5 cột normalized, không có box vượt biên ảnh).
+- Danh sách ít nhất 10 ảnh đã rà bằng mắt: `drive_005.jpg`, `drive_007.jpg`, `drive_008.jpg`, `drive_009.jpg`, `drive_015.jpg`, `drive_019.jpg`, `drive_021.jpg`, `drive_024.jpg`, `drive_026.jpg`, `drive_030.jpg`.
 - Lỗi bỏ sót/box/class phát hiện khi rà và cách sửa:
+  - Ảnh `drive_008.jpg`: Bỏ sót 1 xe buýt (`bus`), sau khi rà soát đã gán bổ sung bounding box ôm sát phần nhìn thấy của xe.
+  - Ảnh `drive_009.jpg`: Gán nhầm class là `van`, đã sửa lại thành `truck` (ID 1) để khớp với mô tả trong `GUIDELINE_MINI.md`.
 - Commit khóa nhãn ban đầu:
 
 ## 4. Gold QC và rework
